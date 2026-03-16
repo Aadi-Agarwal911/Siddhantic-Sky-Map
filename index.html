@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Siddhantic Sky-Map · Navagraha Dṛśya</title>
+  <meta name="description"
+    content="Interactive sky-map using classical Indian astronomy: Ahargana time engine, Madhyama mean motion, and Spashta correction engine." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         LEFT PANEL — Time Engine (Ahargana) + Graha Cards
+         ═══════════════════════════════════════════════════════════════════ -->
+    <aside class="panel" id="panel-left">
+
+      <!-- App header -->
+      <div>
+        <div class="app-title">Siddhantic<br>Sky-Map</div>
+        <div class="app-subtitle">Navagraha Dṛśya · सिद्धान्त</div>
+      </div>
+
+      <!-- ── Time Engine ──────────────────────────────────── -->
+      <div>
+        <div class="section-title">⏱ Time Engine</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+          <div class="date-wrap">
+            <label for="date-input">Select Date</label>
+            <input type="date" id="date-input" aria-label="Select date for sky-map" />
+          </div>
+          <button id="btn-now">◉ NOW</button>
+        </div>
+      </div>
+
+      <!-- ── Ahargana Counter ─────────────────────────────── -->
+      <div>
+        <div class="section-title">⚙ Ahargana</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+          <div class="stat-block">
+            <div class="stat-label">Day Count from Kali Yuga</div>
+            <div class="stat-value" id="ahargana-value">—</div>
+            <div class="stat-note">Epoch: 18 Feb 3102 BCE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Navagraha Cards ─────────────────────────────── -->
+      <div>
+        <div class="section-title">🪐 Navagraha</div>
+        <div class="graha-grid" style="margin-top:10px;">
+          <div class="graha-card" data-graha="surya">
+            <span class="card-glyph">☀</span>
+            <span class="card-name">Sūrya</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="chandra">
+            <span class="card-glyph">☽</span>
+            <span class="card-name">Chandra</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="mangala">
+            <span class="card-glyph">♂</span>
+            <span class="card-name">Maṅgala</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="budha">
+            <span class="card-glyph">☿</span>
+            <span class="card-name">Budha</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="guru">
+            <span class="card-glyph">♃</span>
+            <span class="card-name">Guru</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="shukra">
+            <span class="card-glyph">♀</span>
+            <span class="card-name">Śukra</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="shani">
+            <span class="card-glyph">♄</span>
+            <span class="card-name">Śani</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="rahu">
+            <span class="card-glyph">☊</span>
+            <span class="card-name">Rāhu</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+          <div class="graha-card" data-graha="ketu">
+            <span class="card-glyph">☋</span>
+            <span class="card-name">Ketu</span>
+            <span class="card-long">—</span>
+            <span class="card-rasi">—</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CENTRE — Sky-Map Canvas
+         ═══════════════════════════════════════════════════════════════════ -->
+    <main id="panel-center">
+      <canvas id="skymap-canvas" aria-label="Siddhantic sky map showing navagraha positions"></canvas>
+      <div class="canvas-label">Click any planet glyph to select · Aries at top · Counter-clockwise</div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         RIGHT PANEL — Selected Planet Detail + Selector + Legend
+         ═══════════════════════════════════════════════════════════════════ -->
+    <aside class="panel panel-right" id="panel-right">
+
+      <!-- ── Selected Planet Hero ────────────────────────── -->
+      <div>
+        <div class="section-title">✦ Selected Graha</div>
+        <div class="selected-hero" style="margin-top:10px;">
+          <div class="hero-name" id="selected-name">Sūrya</div>
+
+          <div class="hero-row">
+            <span class="hero-label">True Longitude</span>
+            <span class="hero-val" id="selected-long">—</span>
+          </div>
+          <div class="hero-row">
+            <span class="hero-label">Rāśi</span>
+            <span class="hero-val" id="selected-rasi">—</span>
+          </div>
+          <div class="hero-row">
+            <span class="hero-label">Nakṣatra</span>
+            <span class="hero-val" id="selected-naks">—</span>
+          </div>
+          <div class="hero-row">
+            <span class="hero-label">Degree in Sign</span>
+            <span class="hero-val" id="selected-deg">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Planet Selector ─────────────────────────────── -->
+      <div>
+        <div class="section-title">🔭 Select Graha</div>
+        <div class="planet-btn-grid" style="margin-top:10px;">
+          <button class="planet-btn active" data-graha="surya" id="btn-surya">
+            <span class="btn-glyph">☀</span>Sūrya
+          </button>
+          <button class="planet-btn" data-graha="chandra" id="btn-chandra">
+            <span class="btn-glyph">☽</span>Chandra
+          </button>
+          <button class="planet-btn" data-graha="mangala" id="btn-mangala">
+            <span class="btn-glyph">♂</span>Maṅgala
+          </button>
+          <button class="planet-btn" data-graha="budha" id="btn-budha">
+            <span class="btn-glyph">☿</span>Budha
+          </button>
+          <button class="planet-btn" data-graha="guru" id="btn-guru">
+            <span class="btn-glyph">♃</span>Guru
+          </button>
+          <button class="planet-btn" data-graha="shukra" id="btn-shukra">
+            <span class="btn-glyph">♀</span>Śukra
+          </button>
+          <button class="planet-btn" data-graha="shani" id="btn-shani">
+            <span class="btn-glyph">♄</span>Śani
+          </button>
+          <button class="planet-btn" data-graha="rahu" id="btn-rahu">
+            <span class="btn-glyph">☊</span>Rāhu
+          </button>
+          <button class="planet-btn" data-graha="ketu" id="btn-ketu">
+            <span class="btn-glyph">☋</span>Ketu
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ── Colour Legend ───────────────────────────────── -->
+      <div>
+        <div class="section-title">📖 Legend</div>
+        <div class="legend" style="margin-top:10px;">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#FFD700;"></div>
+            <span class="legend-name">Sūrya</span>
+            <span>Sun</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#C8C8E8;"></div>
+            <span class="legend-name">Chandra</span>
+            <span>Moon</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#FF4500;"></div>
+            <span class="legend-name">Maṅgala</span>
+            <span>Mars</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#32CD32;"></div>
+            <span class="legend-name">Budha</span>
+            <span>Mercury</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#DAA520;"></div>
+            <span class="legend-name">Guru</span>
+            <span>Jupiter</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#FF69B4;"></div>
+            <span class="legend-name">Śukra</span>
+            <span>Venus</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#8A9BA8;"></div>
+            <span class="legend-name">Śani</span>
+            <span>Saturn</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#9400D3;"></div>
+            <span class="legend-name">Rāhu / Ketu</span>
+            <span>Lunar Nodes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── About box ───────────────────────────────────── -->
+      <div>
+        <div class="section-title">ℹ About</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text-dim);line-height:1.7;">
+          Positions computed using <strong style="color:var(--text);">Sūrya Siddhānta</strong> algorithms:<br>
+          <br>
+          <strong style="color:var(--gold);">Ahargana</strong> — Civil day count from Kali Yuga epoch (18 Feb 3102
+          BCE).<br>
+          <br>
+          <strong style="color:var(--gold);">Madhyama</strong> — Mean longitude via Mahāyuga revolution constants.<br>
+          <br>
+          <strong style="color:var(--gold);">Spaṣṭa</strong> — True longitude via two-epicycle corrections (Manda +
+          Śīghra).
+        </div>
+      </div>
+
+    </aside>
+
+  </div><!-- .app -->
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       BIRTH PREDICTIONS — Full-width bottom panel
+       ═══════════════════════════════════════════════════════════════════ -->
+  <section id="pred-panel" aria-label="Birth date planetary predictions">
+
+    <div class="pred-panel-header">
+      <span class="pred-panel-title">🔮 Birth Chart Predictions</span>
+      <span class="pred-panel-sub">Enter your date of birth to reveal what the stars say about you</span>
+    </div>
+
+    <div class="pred-panel-body">
+
+      <!-- Input column -->
+      <div class="pred-input-col">
+        <label class="pred-birth-label" for="pred-birth-input">Date of Birth</label>
+        <input type="date" id="pred-birth-input" class="pred-birth-input"
+          aria-label="Date of birth for planetary predictions" />
+        <button id="pred-calc-btn" class="pred-calc-btn">✦ Reveal My Stars</button>
+        <div class="pred-caption" id="pred-caption"></div>
+      </div>
+
+      <!-- Results table -->
+      <div class="pred-results-col" id="pred-results" style="display:none;">
+
+        <!-- ★ Your Personal Planet card -->
+        <div id="pred-ruling-card" class="pred-ruling-card" style="display:none;"
+          aria-label="Your personal ruling planet"></div>
+
+        <div class="pred-table-wrap">
+          <table class="pred-table" aria-label="Birth chart planetary predictions">
+            <thead>
+              <tr>
+                <th>Planet</th>
+                <th>Sign</th>
+                <th>What It Means for You</th>
+              </tr>
+            </thead>
+            <tbody id="pred-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- JS — load order matters: constants first, then engines, then renderer, then bootstrap -->
+  <script src="js/ahargana.js"></script>
+  <script src="js/madhyama.js"></script>
+  <script src="js/spashta.js"></script>
+  <script src="js/predictions.js"></script>
+  <script src="js/skymap.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

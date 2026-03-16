@@ -1,0 +1,771 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   style.css — Siddhantic Sky-Map
+   Dark cosmic theme · Glassmorphism panels · Gold/Indigo palette
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── Reset & Custom Properties ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg-deep: #020110;
+    --bg-mid: #0d0830;
+    --bg-panel: rgba(20, 12, 60, 0.72);
+    --border: rgba(140, 100, 255, 0.22);
+    --gold: #f0c040;
+    --gold-dim: #c09820;
+    --accent: #9d6fff;
+    --accent-dim: rgba(157, 111, 255, 0.3);
+    --text: #e4dcff;
+    --text-dim: rgba(200, 180, 255, 0.55);
+    --radius: 16px;
+    --glass: blur(14px) saturate(1.6);
+    --shadow: 0 8px 40px rgba(0, 0, 80, 0.6);
+}
+
+html,
+body {
+    height: 100%;
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.app {
+    display: grid;
+    grid-template-columns: 280px 1fr 260px;
+    grid-template-rows: 1fr;
+    height: 100vh;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient background nebula */
+.app::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 60% 50% at 25% 50%, rgba(60, 0, 120, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 75% 50%, rgba(0, 30, 120, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 50% 80%, rgba(100, 0, 60, 0.10) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Glass Panel base ───────────────────────────────────────────────────── */
+.panel {
+    background: var(--bg-panel);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    border-right: 1px solid var(--border);
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    position: relative;
+    z-index: 2;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-dim) transparent;
+}
+
+.panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.panel::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+    border-radius: 2px;
+}
+
+.panel-right {
+    border-right: none;
+    border-left: 1px solid var(--border);
+}
+
+/* ── Section & Title styles ─────────────────────────────────────────────── */
+.section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+}
+
+.app-title {
+    font-family: 'Cinzel', serif;
+    font-size: 17px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f0c040, #c080ff, #60a0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.25;
+    margin-bottom: 2px;
+}
+
+.app-subtitle {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    font-family: 'Cinzel', serif;
+}
+
+/* ── Time Engine Panel (Left) ───────────────────────────────────────────── */
+#panel-left {
+    grid-column: 1;
+}
+
+.stat-block {
+    background: rgba(60, 30, 120, 0.28);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.03em;
+    word-break: break-all;
+}
+
+.stat-value.small {
+    font-size: 15px;
+    color: var(--accent);
+}
+
+.stat-note {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* Date Input */
+.date-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.date-wrap label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+#date-input {
+    width: 100%;
+    background: rgba(40, 20, 90, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    color-scheme: dark;
+}
+
+#date-input:focus {
+    border-color: var(--accent);
+}
+
+#btn-now {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(157, 111, 255, 0.25), rgba(60, 0, 140, 0.35));
+    border: 1px solid var(--accent);
+    border-radius: 9px;
+    color: var(--accent);
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    padding: 9px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#btn-now:hover {
+    background: rgba(157, 111, 255, 0.35);
+}
+
+#btn-now:active {
+    transform: scale(0.97);
+}
+
+/* Graha quick-cards */
+.graha-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.graha-card {
+    background: rgba(40, 20, 80, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.graha-card:hover {
+    border-color: var(--accent);
+    background: rgba(80, 40, 160, 0.35);
+}
+
+.card-glyph {
+    font-size: 16px;
+}
+
+.card-name {
+    font-size: 11px;
+    font-family: 'Cinzel', serif;
+    color: var(--text);
+}
+
+.card-long {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 500;
+}
+
+.card-rasi {
+    font-size: 10px;
+    color: var(--text-dim);
+}
+
+/* ── Sky-Map Centre ─────────────────────────────────────────────────────── */
+#panel-center {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    backdrop-filter: none;
+    border: none;
+}
+
+#skymap-canvas {
+    border-radius: 50%;
+    box-shadow: 0 0 80px rgba(120, 60, 255, 0.2), 0 0 30px rgba(60, 0, 160, 0.4), var(--shadow);
+    display: block;
+    cursor: crosshair;
+}
+
+.canvas-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-top: 12px;
+    text-align: center;
+}
+
+/* ── Detail Panel (Right) ───────────────────────────────────────────────── */
+#panel-right {
+    grid-column: 3;
+}
+
+/* Selected planet hero card */
+.selected-hero {
+    background: rgba(60, 30, 120, 0.35);
+    border: 1px solid rgba(157, 111, 255, 0.35);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.selected-hero::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(157, 111, 255, 0.15), transparent);
+    pointer-events: none;
+}
+
+.hero-name {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(140, 100, 255, 0.12);
+    font-size: 13px;
+}
+
+.hero-row:last-child {
+    border-bottom: none;
+}
+
+.hero-label {
+    color: var(--text-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.hero-val {
+    color: var(--text);
+    font-weight: 500;
+    text-align: right;
+}
+
+/* Planet selector buttons */
+.planet-btn-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.planet-btn {
+    background: rgba(40, 20, 90, 0.55);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    padding: 8px 4px;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    line-height: 1.4;
+}
+
+.planet-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.planet-btn.active {
+    background: rgba(157, 111, 255, 0.25);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.planet-btn .btn-glyph {
+    font-size: 15px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+/* Legend */
+.legend {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    background: rgba(30, 10, 60, 0.3);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-name {
+    color: var(--text);
+    font-weight: 500;
+    min-width: 60px;
+}
+
+/* ── Predictions Panel ──────────────────────────────────────────────────── */
+
+/* Birth date input area */
+.pred-birth-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.pred-birth-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.pred-birth-input {
+    width: 100%;
+    background: rgba(40, 20, 90, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    color-scheme: dark;
+}
+
+.pred-birth-input:focus {
+    border-color: var(--accent);
+}
+
+.pred-calc-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(240, 192, 64, 0.2), rgba(120, 60, 200, 0.3));
+    border: 1px solid var(--gold);
+    border-radius: 9px;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.pred-calc-btn:hover {
+    background: linear-gradient(135deg, rgba(240, 192, 64, 0.32), rgba(140, 70, 230, 0.4));
+    box-shadow: 0 0 14px rgba(240, 192, 64, 0.25);
+}
+
+.pred-calc-btn:active {
+    transform: scale(0.97);
+}
+
+/* Caption below date */
+.pred-caption {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+    margin: 4px 0 8px;
+    letter-spacing: 0.04em;
+}
+
+/* Table container */
+.pred-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(20, 8, 55, 0.45);
+}
+
+.pred-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    table-layout: fixed;
+}
+
+.pred-table thead tr {
+    background: rgba(60, 30, 120, 0.55);
+}
+
+.pred-table th {
+    padding: 7px 6px;
+    color: var(--text-dim);
+    font-size: 9px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Column widths */
+.pred-table th:nth-child(1) {
+    width: 22%;
+}
+
+.pred-table th:nth-child(2) {
+    width: 28%;
+}
+
+.pred-table th:nth-child(3) {
+    width: 50%;
+}
+
+.pred-table tbody tr {
+    border-bottom: 1px solid rgba(140, 100, 255, 0.08);
+    transition: background 0.15s;
+}
+
+.pred-table tbody tr:nth-child(even) {
+    background: rgba(40, 15, 90, 0.25);
+}
+
+.pred-table tbody tr:hover {
+    background: rgba(100, 60, 200, 0.18);
+}
+
+.pred-table td {
+    padding: 7px 6px;
+    vertical-align: top;
+}
+
+/* Planet cell */
+.pred-planet-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+}
+
+.pred-glyph {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.pred-en-name {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pred-sk-name {
+    font-size: 9px;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+/* Sign cell */
+.pred-sign-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pred-sign-sym {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.pred-sign-en {
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.pred-sign-elem {
+    font-size: 9px;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+/* Meaning cell */
+.pred-meaning-cell {
+    font-size: 10px;
+    color: var(--text);
+    line-height: 1.55;
+}
+
+/* ── Scrollbar tweaks ───────────────────────────────────────────────────── */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-dim) transparent;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+    .app {
+        grid-template-columns: 240px 1fr 220px;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        overflow: auto;
+    }
+
+    .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        height: auto;
+        overflow: visible;
+    }
+
+    #panel-left {
+        grid-column: 1;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    #panel-center {
+        grid-column: 1;
+        min-height: 60vw;
+    }
+
+    #panel-right {
+        grid-column: 1;
+        border-left: none;
+        border-top: 1px solid var(--border);
+    }
+
+    .app::before {
+        display: none;
+    }
+}
+
+/* ── Birth Predictions Bottom Panel ─────────────────────────────────────── */
+#pred-panel {
+    position: relative;
+    z-index: 2;
+    background: rgba(12, 6, 40, 0.97);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    border-top: 2px solid rgba(240, 192, 64, 0.3);
+    box-shadow: 0 -8px 40px rgba(0, 0, 80, 0.5);
+}
+
+.pred-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, rgba(60, 20, 120, 0.55), rgba(20, 8, 60, 0.6));
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.pred-panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+}
+
+.pred-panel-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+}
+
+.pred-panel-body {
+    display: flex;
+    gap: 28px;
+    padding: 20px 32px 28px;
+    align-items: flex-start;
+}
+
+.pred-input-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 210px;
+    max-width: 240px;
+    flex-shrink: 0;
+}
+
+.pred-results-col {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Wider column proportions in full-width context */
+.pred-results-col .pred-table {
+    font-size: 12px;
+}
+
+.pred-results-col .pred-table th:nth-child(1) {
+    width: 13%;
+}
+
+.pred-results-col .pred-table th:nth-child(2) {
+    width: 17%;
+}
+
+.pred-results-col .pred-table th:nth-child(3) {
+    width: 70%;
+}
+
+.pred-results-col .pred-meaning-cell {
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--text);
+}
+
+@media (max-width: 900px) {
+    .pred-panel-body {
+        flex-direction: column;
+        padding: 16px 18px 20px;
+    }
+
+    .pred-input-col {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .pred-panel-header {
+        padding: 12px 18px;
+    }
+}
